@@ -1,7 +1,9 @@
 package com.example.todolist.ui.feature
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -22,7 +24,7 @@ import com.example.todolist.ui.theme.TodoListTheme
 
 @Composable
 fun ListScreen() {
-    
+    ListContent(todos = emptyList())
 }
 
 @Composable
@@ -40,7 +42,8 @@ fun ListContent(
         LazyColumn(
             modifier = Modifier
                 .consumeWindowInsets(it),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(todos) {todo ->
                 TodoItem(

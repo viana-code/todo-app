@@ -25,6 +25,6 @@ val todo2 = Todo(
 val todo3 = Todo(
     id = 3,
     title = "Comprar bananas",
-    description = "",
+    description = null,
     isCompleted = false
 )
