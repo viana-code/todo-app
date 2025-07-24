@@ -3,7 +3,6 @@ package com.example.todolist.ui.feature
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,18 +22,23 @@ import com.example.todolist.ui.components.TodoItem
 import com.example.todolist.ui.theme.TodoListTheme
 
 @Composable
-fun ListScreen() {
-    ListContent(todos = emptyList())
+fun ListScreen(
+    navigateToAddEditScreen: (id: Long?) -> Unit
+) {
+    ListContent(
+        todos = emptyList(),
+        onAddItemClick = navigateToAddEditScreen
+    )
 }
 
 @Composable
 fun ListContent(
     todos: List<Todo>,
-    modifier: Modifier = Modifier
+    onAddItemClick: (id: Long?) -> Unit
     ) {
     Scaffold (
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = { onAddItemClick(null) }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -61,6 +65,6 @@ fun ListContent(
 @Composable
 private fun ListContentPreview() {
     TodoListTheme {
-        ListContent(todos = listOf(todo1, todo2, todo3))
+        ListContent(todos = listOf(todo1, todo2, todo3), onAddItemClick = {})
     }
 }
