@@ -27,8 +27,8 @@ import com.example.todolist.domain.todo2
 import com.example.todolist.domain.todo3
 import com.example.todolist.navigation.AddEditRoute
 import com.example.todolist.ui.UIEvent
-import com.example.todolist.ui.components.TodoItem
 import com.example.todolist.ui.theme.TodoListTheme
+import com.example.todolist.ui.components.TodoItem
 
 @Composable
 fun ListScreen(
