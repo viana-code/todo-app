@@ -11,6 +11,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -24,6 +25,8 @@ import com.example.todolist.domain.Todo
 import com.example.todolist.domain.todo1
 import com.example.todolist.domain.todo2
 import com.example.todolist.domain.todo3
+import com.example.todolist.navigation.AddEditRoute
+import com.example.todolist.ui.UIEvent
 import com.example.todolist.ui.components.TodoItem
 import com.example.todolist.ui.feature.addedit.AddEditViewModel
 import com.example.todolist.ui.theme.TodoListTheme
@@ -47,18 +50,42 @@ fun ListScreen(
 
     ListContent(
         todos = todos,
-        onAddItemClick = navigateToAddEditScreen
+        onEvent = viewModel::onEvent
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect{ uiEvent ->
+            when (uiEvent) {
+                is UIEvent.Navigate<*> -> {
+                    when (uiEvent.route) {
+                        is AddEditRoute -> {
+                            navigateToAddEditScreen(uiEvent.route.id)
+                        }
+                    }
+                }
+
+                UIEvent.NavigateBack -> {
+
+                }
+
+                is UIEvent.ShowSnackbar -> {
+
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun ListContent(
     todos: List<Todo>,
-    onAddItemClick: (id: Long?) -> Unit
+    onEvent: (ListEvent) -> Unit
     ) {
     Scaffold (
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddItemClick(null) }) {
+            FloatingActionButton(onClick = {
+                onEvent(ListEvent.AddEdit(null))
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -72,9 +99,15 @@ fun ListContent(
             items(todos) {todo ->
                 TodoItem(
                     todo = todo,
-                    onItemClick = {},
-                    onCompletedChange = {},
-                    onDeleteItem = {}
+                    onItemClick = {
+                        onEvent(ListEvent.AddEdit(todo.id))
+                    },
+                    onCompletedChange = {
+                        onEvent(ListEvent.CompleteChanged(todo.id, it))
+                    },
+                    onDeleteItem = {
+                        onEvent(ListEvent.Delete(todo.id))
+                    }
                 )
             }
         }
@@ -85,6 +118,9 @@ fun ListContent(
 @Composable
 private fun ListContentPreview() {
     TodoListTheme {
-        ListContent(todos = listOf(todo1, todo2, todo3), onAddItemClick = {})
+        ListContent(
+            todos = listOf(todo1, todo2, todo3),
+            onEvent = {}
+        )
     }
 }
